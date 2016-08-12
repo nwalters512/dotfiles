@@ -76,9 +76,11 @@ else
         else
             echo "Unable to automatically install zsh"
             echo "Please install zsh, the re-run this script!"
+            exit
         fi
     # If the platform is OS X, tell the user to install zsh :)
     elif [[ $platform == 'Darwin' ]]; then
+        echo "Unable to automatically install zsh"
         echo "Please install zsh, then re-run this script!"
         exit
     fi
