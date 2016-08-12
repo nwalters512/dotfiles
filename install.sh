@@ -70,10 +70,12 @@ else
         if [[ -f /etc/redhat-release ]]; then
             sudo yum install zsh
             install_zsh
-        fi
-        if [[ -f /etc/debian_version ]]; then
+        elif [[ -f /etc/debian_version ]]; then
             sudo apt-get install zsh
             install_zsh
+        else
+            echo "Unable to automatically install zsh"
+            echo "Please install zsh, the re-run this script!"
         fi
     # If the platform is OS X, tell the user to install zsh :)
     elif [[ $platform == 'Darwin' ]]; then
