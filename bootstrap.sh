@@ -29,6 +29,8 @@ for file in $FILES; do
 
   # Only create symbolic link if one doesn't already exist.
   if [ ! -L ~/.$file ]; then
+    echo "Creating symlink to $file in home directory"
+    ln -s $DIR/$file ~/$file
   elif [ $(readlink ~/$file) = $DIR/$file ]; then
     echo "Correct symlink already exists for $file"
   else
