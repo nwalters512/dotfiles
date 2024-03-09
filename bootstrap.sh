@@ -1,13 +1,20 @@
+# Get the directory in which this file is located.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ########################
 # Install dependencies #
 ########################
 
-# Try to install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
 # Install Homebrew dependencies.
 brew bundle install
+
+# Install oh-my-zsh if needed.
+if [ -d ~/.oh-my-zsh ]; then
+  echo "oh-my-zsh already installed"
+else
+  echo "Installing oh-my-zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
 ###################
 # Set up dotfiles #
@@ -15,9 +22,7 @@ brew bundle install
 
 FILES=".zshrc .vimrc"
 
-# Get the directory in which this file is located.
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
+# Create symlinks for each dotfile.
 for file in $FILES; do
   # Only attempt to back up an existing dotfile it if exists.
   if [ -e ~/$file ]; then
@@ -40,3 +45,4 @@ for file in $FILES; do
     ln -s $DIR/$file ~/$file
   fi
 done
+
