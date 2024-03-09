@@ -5,8 +5,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Install dependencies #
 ########################
 
-# Install Homebrew dependencies.
-brew bundle install
+# Install Homebrew dependencies on macOS.
+if [[ $(uname) == "Darwin" ]]; then
+  if [[ $(command -v brew) ]]; then
+    echo "Homebrew already installed"
+  else
+    echo "Installing Homebrew"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+
+  brew bundle install
+fi
 
 # Install oh-my-zsh if needed.
 if [ -d ~/.oh-my-zsh ]; then
