@@ -36,9 +36,10 @@ for file in $FILES; do
   # Only attempt to back up an existing dotfile it if exists.
   if [ -e ~/$file ]; then
     BACKUP_DIR=~/.dotfiles_bak
-    echo "Moving existing dotfile $file from ~/ to $BACKUP_DIR"
+    BACKUP_FILE_NAME=$file-$(date +%Y%m%d%H%M%S)
+    echo "Moving existing dotfile ~/$file to $BACKUP_DIR/$BACKUP_FILE_NAME"
     mkdir -p $BACKUP_DIR
-    mv ~/$file $BACKUP_DIR/$file-$(date +%Y%m%d%H%M%S)
+    mv ~/$file $BACKUP_DIR/$BACKUP_FILE_NAME
   fi
 
   # Only create symbolic link if one doesn't already exist.
