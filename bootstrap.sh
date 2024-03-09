@@ -36,6 +36,7 @@ for file in $FILES; do
   if [ $(readlink ~/$file) = $DIR/$file ]; then
     echo "Correct symlink already exists for $file"
     continue
+  fi
 
   if [ -L ~/$file ]; then
     echo "Existing symlink for $file points to $(readlink ~/$file)"
@@ -43,6 +44,7 @@ for file in $FILES; do
     rm ~/$file
     ln -s $DIR/$file ~/$file
     continue
+  fi
 
   if [ -e ~/$file ]; then
     BACKUP_DIR=~/.dotfiles_bak
