@@ -26,3 +26,15 @@ alias vi=vim
 
 # For autocompletion.
 autoload -U compinit && compinit
+
+
+# If we're running on a macOS machine, assume that we need to add these paths
+# so that we can install pygraphviz.
+if [[ $(uname) == "Darwin" ]]; then
+  export LDFLAGS="-L/opt/homebrew/opt/graphviz/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/graphviz/include"
+fi
+# export LDFLAGS="-L/opt/homebrew/opt/openblas/lib -L/opt/homebrew/opt/graphviz/lib"
+# export CPPFLAGS="-I/opt/homebrew/opt/openblas/include -I/opt/homebrew/opt/graphviz/include"
+# export PKG_CONFIG_PATH="/opt/homebrew/opt/openblas/lib/pkgconfig"
+# export OPENBLAS="$(brew --prefix openblas)"
