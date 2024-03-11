@@ -28,9 +28,12 @@ alias vi=vim
 autoload -U compinit && compinit
 
 
-# If we're running on a macOS machine, assume that we need to add these paths
-# so that we can install pygraphviz.
+# If we're running on a macOS machine, add some homebrew-specific paths.
 if [[ $(uname) == "Darwin" ]]; then
+  # This is needed to pick up Node versions.
+  export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+
+  # These are needed to install pygraphviz.
   export LDFLAGS="-L/opt/homebrew/opt/graphviz/lib"
   export CPPFLAGS="-I/opt/homebrew/opt/graphviz/include"
 fi
