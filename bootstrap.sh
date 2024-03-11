@@ -68,3 +68,13 @@ git config --global alias.ci commit
 git config --global alias.st status
 
 git config --global --add --bool push.autoSetupRemote true
+
+#########################
+# macOS-specific config #
+#########################
+
+# Disable "press and hold", which causes conflicts with Vim keybindings
+# in VSCode.
+if [[ $(uname) == "Darwin" ]]; then
+  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+fi
