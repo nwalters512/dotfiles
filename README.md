@@ -8,7 +8,7 @@ This repository exists to track my custom dotfiles. It includes a script to quic
 * Sets `zsh` as the default shell
 
 ## Usage
-This repository should be cloned to `~/.dotfiles`. Then, run the included `install.sh` script to set everything up.
+This repository should be cloned to `~/.dotfiles`. Then, run the included `bootstrap.sh` script to set everything up.
 
 A nice one-liner to get started quickly:
 

@@ -31,13 +31,16 @@ brew "jq"
 brew "make"
 brew "moreutils"
 brew "node@20"
+brew "nvm"
 brew "openblas"
 brew "openjdk"
 brew "packer"
 brew "pandoc"
 brew "pinentry-mac"
 brew "pnpm"
-brew "postgresql@15", restart_service: true, link: true
+brew "postgresql@17", restart_service: true, link: true
+# Must be installed after postgresql
+brew "pgvector"
 brew "python@3.10"
 brew "r"
 brew "redis", restart_service: true
@@ -53,4 +56,5 @@ brew "minamijoyo/tfupdate/tfupdate"
 brew "oven-sh/bun/bun"
 brew "stripe/stripe-cli/stripe"
 cask "docker"
+cask "mactex"
 cask "ngrok"
