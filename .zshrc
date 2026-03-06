@@ -3,11 +3,11 @@ export PATH="/usr/local/bin:$PATH"
 # Homebrew
 export PATH="/opt/homebrew/bin:$PATH"
 
-# Use Python3.10 for now
-export PATH="/opt/homebrew/opt/python@3.10/libexec/bin:$PATH"
-
 # Use make installed by Homebrew instead of the version that ships with macOS
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+
+# Use Node 24
+export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -19,13 +19,14 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
-# thefuck
-eval $(thefuck --alias)
+# thefuck (lazy loaded)
+fuck() {
+  unset -f fuck
+  eval $(thefuck --alias)
+  fuck "$@"
+}
 
 alias vi=vim
-
-# For autocompletion.
-autoload -U compinit && compinit
 
 
 # If we're running on a macOS machine, add some homebrew-specific paths.
@@ -42,9 +43,18 @@ fi
 # export PKG_CONFIG_PATH="/opt/homebrew/opt/openblas/lib/pkgconfig"
 # export OPENBLAS="$(brew --prefix openblas)"
 
+# NVM (lazy loaded for faster shell startup)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  nvm "$@"
+}
+node() { unset -f node npm npx; nvm use default >/dev/null 2>&1; node "$@" }
+npm() { unset -f node npm npx; nvm use default >/dev/null 2>&1; npm "$@" }
+npx() { unset -f node npm npx; nvm use default >/dev/null 2>&1; npx "$@" }
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/nathan/.cache/lm-studio/bin"
+# Docker CLI completions (fpath only - compinit handled by oh-my-zsh)
+fpath=(/Users/nathan/.docker/completions $fpath)

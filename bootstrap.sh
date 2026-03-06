@@ -78,3 +78,25 @@ git config --global --add --bool push.autoSetupRemote true
 if [[ $(uname) == "Darwin" ]]; then
   defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 fi
+
+########################
+# Claude Code skills   #
+########################
+
+# Symlink personal Claude Code skills from dotfiles.
+mkdir -p ~/.claude
+if [ -L ~/.claude/skills ]; then
+  if [ "$(readlink ~/.claude/skills)" = "$DIR/.claude/skills" ]; then
+    echo "Correct symlink already exists for Claude skills"
+  else
+    echo "Replacing Claude skills symlink"
+    rm ~/.claude/skills
+    ln -s "$DIR/.claude/skills" ~/.claude/skills
+  fi
+elif [ -d ~/.claude/skills ]; then
+  echo "Warning: ~/.claude/skills is a directory, not a symlink. Skipping."
+  echo "  Move contents to $DIR/.claude/skills/ and re-run bootstrap."
+else
+  echo "Creating symlink for Claude skills"
+  ln -s "$DIR/.claude/skills" ~/.claude/skills
+fi
