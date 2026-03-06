@@ -1,5 +1,5 @@
 ---
-name: pr-comments
+name: address-pr-comments
 description: Analyze and address unresolved PR review comments. Use when working through PR feedback, replying to review threads, or resolving code review items.
 disable-model-invocation: true
 ---
