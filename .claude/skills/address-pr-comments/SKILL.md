@@ -1,7 +1,6 @@
 ---
 name: address-pr-comments
 description: Analyze and address unresolved PR review comments. Use when working through PR feedback, replying to review threads, or resolving code review items.
-disable-model-invocation: true
 ---
 
 # PR Review Comments Workflow
@@ -21,9 +20,11 @@ gh pr view --json number,url --jq '.number'
 
    The `reviewThreads` connection caps at 100 per page and does not support filtering by `isResolved`, so you must paginate and filter client-side. Use `pageInfo.hasNextPage` and `pageInfo.endCursor` to fetch all pages:
 
-   ```bash
-   gh api graphql --paginate -f query='
-     query($owner: String!, $repo: String!, $pr: Int!, $cursor: String) {
+   **Important**: Do not pass the query inline with `-f query='...'` — the Bash tool escapes `!` to `\!` even inside single quotes, which produces invalid GraphQL. Write the query to a temp file and use `-F query=@file` instead.
+
+   Write this to e.g. `.context/pr-threads-query.graphql`:
+   ```graphql
+   query($owner: String!, $repo: String!, $pr: Int!, $cursor: String) {
        repository(owner: $owner, name: $repo) {
          pullRequest(number: $pr) {
            reviewThreads(first: 100, after: $cursor) {
@@ -48,7 +49,13 @@ gh pr view --json number,url --jq '.number'
            }
          }
        }
-     }' -f owner=OWNER -f repo=REPO -F pr=NUMBER
+   }
+   ```
+
+   Then run:
+   ```bash
+   gh api graphql --paginate -F query=@.context/pr-threads-query.graphql \
+     -f owner=OWNER -f repo=REPO -F pr=NUMBER
    ```
 
    Note: `gh api graphql --paginate` auto-paginates when the query uses a `$cursor` variable and the response includes `pageInfo`.
@@ -67,7 +74,7 @@ gh pr view --json number,url --jq '.number'
    - Summary of what's being asked
    - Your recommended action (fix, investigate, reply-only, defer)
 
-**Wait for the user to confirm which threads to address before proceeding.**
+**⛔ STOP: Wait for the user to confirm which threads to address before proceeding. Do NOT start investigating or making changes yet.**
 
 ## Phase 2: Address threads
 
@@ -81,11 +88,11 @@ For each thread the user wants addressed:
 
 4. **If deferring**: Note that it should be captured in a follow-up issue if not already.
 
-Present your proposed actions and reply drafts to the user for review before proceeding.
+**⛔ STOP: Present your proposed actions and reply drafts to the user for review. Do NOT commit, push, or post replies yet.**
 
 ## Phase 3: Commit, push, and reply
 
-After user approval:
+After explicit user approval of the proposed actions and reply drafts:
 
 1. **Commit** all code changes in a single commit with a message like:
    ```
