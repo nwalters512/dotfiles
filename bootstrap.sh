@@ -79,24 +79,35 @@ if [[ $(uname) == "Darwin" ]]; then
   defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 fi
 
-########################
-# Claude Code skills   #
-########################
+##################
+# Agent skills   #
+##################
 
-# Symlink personal Claude Code skills from dotfiles.
-mkdir -p ~/.claude
-if [ -L ~/.claude/skills ]; then
-  if [ "$(readlink ~/.claude/skills)" = "$DIR/.claude/skills" ]; then
-    echo "Correct symlink already exists for Claude skills"
+AGENT_SKILLS_DIR="$DIR/.agents/skills"
+
+ensure_symlink() {
+  target="$1"
+  source="$2"
+  label="$3"
+
+  mkdir -p "$(dirname "$target")"
+
+  if [ -L "$target" ]; then
+    if [ "$(readlink "$target")" = "$source" ]; then
+      echo "Correct symlink already exists for $label"
+    else
+      echo "Replacing symlink for $label"
+      rm "$target"
+      ln -s "$source" "$target"
+    fi
+  elif [ -e "$target" ]; then
+    echo "Warning: $target exists and is not a symlink. Skipping."
+    echo "  Move contents to $source if needed and re-run bootstrap."
   else
-    echo "Replacing Claude skills symlink"
-    rm ~/.claude/skills
-    ln -s "$DIR/.claude/skills" ~/.claude/skills
+    echo "Creating symlink for $label"
+    ln -s "$source" "$target"
   fi
-elif [ -d ~/.claude/skills ]; then
-  echo "Warning: ~/.claude/skills is a directory, not a symlink. Skipping."
-  echo "  Move contents to $DIR/.claude/skills/ and re-run bootstrap."
-else
-  echo "Creating symlink for Claude skills"
-  ln -s "$DIR/.claude/skills" ~/.claude/skills
-fi
+}
+
+ensure_symlink "$HOME/.agents/skills" "$AGENT_SKILLS_DIR" "agent skills"
+ensure_symlink "$HOME/.claude/skills" "$AGENT_SKILLS_DIR" "Claude skills"
