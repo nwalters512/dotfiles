@@ -101,32 +101,32 @@ After explicit user approval of the proposed actions and reply drafts:
 
 2. **Push** to the remote branch.
 
-3. **Post replies** to each addressed thread using the established format. Use the root comment's `databaseId` as `in_reply_to`:
+3. **Post replies** to each addressed thread using the established format. Use the root comment's `databaseId` as `in_reply_to`. Sign replies with the current agent/tool identity (for example, `Claude` or `Codex`) or with the signature explicitly requested by the user. Do not hard-code another agent's name.
 
    For threads where code was changed:
    ```
    gh api repos/{owner}/{repo}/pulls/{number}/comments \
-     -f "body=Resolved in <short-sha> — <brief description>.
+     -f "body=Resolved in <short-sha> - <brief description>.
 
-   *— Claude*" \
+   *- <agent-name>*" \
      -F in_reply_to=<root_comment_database_id>
    ```
 
    For threads where no change was needed:
    ```
    gh api repos/{owner}/{repo}/pulls/{number}/comments \
-     -f "body=Not an issue — <explanation>.
+     -f "body=Not an issue - <explanation>.
 
-   *— Claude*" \
+   *- <agent-name>*" \
      -F in_reply_to=<root_comment_database_id>
    ```
 
    For threads being deferred:
    ```
    gh api repos/{owner}/{repo}/pulls/{number}/comments \
-     -f "body=Captured in <issue-url> — will address in a follow-up.
+     -f "body=Captured in <issue-url> - will address in a follow-up.
 
-   *— Claude*" \
+   *- <agent-name>*" \
      -F in_reply_to=<root_comment_database_id>
    ```
 
