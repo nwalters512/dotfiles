@@ -66,13 +66,17 @@ gh pr view --json number,url --jq '.number'
    - **Human reviewer** (real GitHub users) vs **Bot reviewer** (e.g. `coderabbitai[bot]`)
    - **Actionable** (requires a code change, comment fix, or investigation)
    - **Informational/deferred** (already deferred to an issue, or just a discussion point)
+   - **Narrative-only reviewer notes** (e.g. comments documenting the reviewer's thinking
+     for other reviewers, such as "I liked this approach and ran with it"). If there is
+     no concrete question, request, or useful reply to add, ignore these threads instead
+     of drafting a reply.
 
 4. Present a summary table to the user showing each unresolved thread:
    - Root comment database ID
    - File and line
    - Reviewer
    - Summary of what's being asked
-   - Your recommended action (fix, investigate, reply-only, defer)
+   - Your recommended action (fix, investigate, reply-only, defer, ignore)
 
 **⛔ STOP: Wait for the user to confirm which threads to address before proceeding. Do NOT start investigating or making changes yet.**
 
@@ -102,6 +106,18 @@ After explicit user approval of the proposed actions and reply drafts:
 2. **Push** to the remote branch.
 
 3. **Post replies** to each addressed thread using the established format. Use the root comment's `databaseId` as `in_reply_to`. Sign replies with the current agent/tool identity (for example, `Claude` or `Codex`) or with the signature explicitly requested by the user. Do not hard-code another agent's name.
+
+   **Commit SHA formatting is strict:** Write every short commit SHA as raw, unformatted hexadecimal text. Do not wrap it in backticks, a Markdown link, quotes, or any other markup. GitHub automatically links a raw SHA to its commit; code formatting prevents that auto-link. Verify the posted reply still contains the exact raw SHA before resolving the thread.
+
+   Correct:
+   ```text
+   Resolved in abc12345 - <brief description>.
+   ```
+
+   Incorrect:
+   ```text
+   Resolved in `abc12345` - <brief description>.
+   ```
 
    For threads where code was changed:
    ```
